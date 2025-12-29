@@ -1,0 +1,6 @@
+order_id,order_date,product,category,price,quantity,city
+1,2024-01-01,Phone,Electronics,900,1,Krakow
+2,2024-01-02,Laptop,Electronics,1500,1,Warsaw
+3,2024-01-02,T-Shirt,Fashion,20,2,Gdansk
+4,2024-01-03,Shoes,Fashion,50,1,Krakow
+5,2024-01-03,Headphones,Electronics,120,1,Wroclaw
