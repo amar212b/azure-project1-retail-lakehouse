@@ -1,0 +1,25 @@
+{
+	"name": "retail_summary",
+	"properties": {
+		"Name": "retail_summary",
+		"EntityType": "DATABASE",
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"Properties": {
+			"IsSyMSCDMDatabase": true
+		},
+		"Source": {
+			"Provider": "ADLS",
+			"Location": "abfss://retail@retaildatalaketest.dfs.core.windows.net/retail_summary",
+			"Properties": {
+				"FormatType": "csv",
+				"LinkedServiceName": "synapse-retail-project-WorkspaceDefaultStorage"
+			}
+		},
+		"PublishStatus": "PUBLISHED",
+		"ObjectVersion": 1,
+		"ObjectId": "55c83c24-5016-4170-94b0-e49b476696e9"
+	},
+	"type": "DATABASE"
+}
