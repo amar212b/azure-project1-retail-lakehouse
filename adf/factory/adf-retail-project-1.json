@@ -1,0 +1,9 @@
+{
+	"name": "adf-retail-project-1",
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "2c7ed784-e910-438b-ad10-3f450e86593e",
+		"tenantId": "e6f6a017-9949-4cda-87c1-8e64b1c58ee9"
+	}
+}
