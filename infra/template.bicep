@@ -1,3 +1,4 @@
+// Test trigger - safe change
 @secure()
 param vulnerabilityAssessments_Default_storageContainerPath string
 param workspaces_synapse_retail_project_name string = 'synapse-retail-project'
