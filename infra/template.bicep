@@ -1,6 +1,6 @@
 // Test trigger - safe change
 @secure()
-param vulnerabilityAssessments_Default_storageContainerPath string
+param vulnerabilityAssessments_Default_storageContainerPath string = 'https://retaildatalaketest.blob.core.windows.net/vulnerability-assessment/'
 param workspaces_synapse_retail_project_name string = 'synapse-retail-project'
 param storageAccounts_retaildatalaketest_name string = 'retaildatalaketest'
 
