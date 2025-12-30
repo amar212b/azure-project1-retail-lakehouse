@@ -18,15 +18,16 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "0448b20c-280f-4708-9abb-ecead1a64537"
+				"spark.autotune.trackingId": "73eb361d-15d9-4203-a7c0-d6e08d65bc06"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
 			"language_info": {
 				"name": "python"
 			},
@@ -37,14 +38,13 @@
 				"endpoint": "https://synapse-retail-project.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkretail",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.5",
 				"nodeCount": 10,
 				"cores": 4,
 				"memory": 28,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -59,7 +59,7 @@
 					}
 				},
 				"source": [
-					"Read Bronze Data"
+					"Read Bronze Data Test Synapse CI/CD workflow trigger"
 				]
 			},
 			{
