@@ -21,6 +21,6 @@ jobs:
       uses: azure/arm-deploy@v1
       with:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
-        template: infra/main.bicep
+        template: infra/template.bicep
         parameters: infra/parameters.json
         deploymentMode: Incremental
