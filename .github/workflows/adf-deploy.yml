@@ -25,6 +25,6 @@ jobs:
       uses: azure/arm-deploy@v1
       with:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
-        template: ARMTemplateForFactory.json
-        parameters: ARMTemplateParametersForFactory.json
+        template: adf-retail-project-1/ARMTemplateForFactory.json
+        parameters: adf-retail-project-1/ARMTemplateParametersForFactory.json
         deploymentMode: Incremental
