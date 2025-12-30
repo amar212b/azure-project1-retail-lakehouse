@@ -118,8 +118,198 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"metadata": {},
-				"cells": []
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "sparkretail",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 1,
+					"runAsWorkspaceSystemIdentity": false,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "1",
+						"spark.dynamicAllocation.maxExecutors": "1",
+						"spark.autotune.trackingId": "0448b20c-280f-4708-9abb-ecead1a64537"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"synapse_widget": {
+						"version": "0.1"
+					},
+					"enableDebugMode": false,
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/2b5d764b-95af-46b2-bb8a-13c0d7842524/resourceGroups/rg-retail-project/providers/Microsoft.Synapse/workspaces/synapse-retail-project/bigDataPools/sparkretail",
+						"name": "sparkretail",
+						"type": "Spark",
+						"endpoint": "https://synapse-retail-project.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkretail",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
+						},
+						"sparkVersion": "3.5",
+						"nodeCount": 10,
+						"cores": 4,
+						"memory": 28,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Read Bronze Data"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"ms_comments": [
+								{
+									"threadId": "82c2bff5-33ff-45d3-8b88-e7f15e926e68",
+									"text": "Read Bronze Data",
+									"status": "active",
+									"user": {
+										"name": "Amardeep Singh",
+										"idType": "aad"
+									},
+									"createdDateUTC": 1766672115404,
+									"modifiedDateUTC": 1766672115404,
+									"replies": []
+								}
+							],
+							"ms_comment_ranges": {
+								"82c2bff5-33ff-45d3-8b88-e7f15e926e68": {
+									"text": "bronze_path",
+									"start": {
+										"line": 1,
+										"column": 1
+									},
+									"end": {
+										"line": 1,
+										"column": 12
+									}
+								}
+							}
+						},
+						"source": [
+							"bronze_path = \"abfss://retail@retaildatalaketest.dfs.core.windows.net/bronze/retail_sales.csv\"\n",
+							"\n",
+							"df = spark.read \\\n",
+							"    .option(\"header\", \"true\") \\\n",
+							"    .csv(bronze_path)\n",
+							"\n",
+							"df.show(5)\n",
+							"df.printSchema()\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						]
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Clean & enrich → Silver DataFrame"
+						]
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"from pyspark.sql.functions import col\n",
+							"\n",
+							"silver_df = df \\\n",
+							"    .withColumn(\"quantity\", col(\"quantity\").cast(\"int\")) \\\n",
+							"    .withColumn(\"price\", col(\"price\").cast(\"double\")) \\\n",
+							"    .withColumn(\"total_amount\", col(\"quantity\") * col(\"price\")) \\\n",
+							"    .dropna(subset=[\"quantity\", \"price\"])  # Removes rows where quantity or price is null\n",
+							"\n",
+							"print(\"Silver row count after cleaning:\", silver_df.count())\n",
+							"silver_df.show(5)\n",
+							"silver_df.printSchema()"
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Write as Delta Lake to Silver layer"
+						]
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"silver_path = \"abfss://retail@retaildatalaketest.dfs.core.windows.net/silver/retail_sales\"\n",
+							"\n",
+							"silver_df.write \\\n",
+							"    .format(\"delta\") \\\n",
+							"    .mode(\"overwrite\") \\\n",
+							"    .option(\"overwriteSchema\", \"true\") \\\n",
+							"    .save(silver_path)\n",
+							"\n",
+							"print(\"✅ Silver layer successfully written as Delta Lake!\")"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"# Verify the silver Delta table\n",
+							"silver_check = spark.read.format(\"delta\").load(silver_path)\n",
+							"\n",
+							"print(\"Verification - Silver row count:\", silver_check.count())\n",
+							"silver_check.show(10)"
+						],
+						"outputs": [],
+						"execution_count": 6
+					}
+				]
 			},
 			"dependsOn": []
 		},
@@ -128,8 +318,185 @@
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"metadata": {},
-				"cells": []
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "sparkretail",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"runAsWorkspaceSystemIdentity": false,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "8d7700ff-9d9e-400a-845c-c2809f6a4ff4"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"synapse_widget": {
+						"version": "0.1"
+					},
+					"enableDebugMode": false,
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/2b5d764b-95af-46b2-bb8a-13c0d7842524/resourceGroups/rg-retail-project/providers/Microsoft.Synapse/workspaces/synapse-retail-project/bigDataPools/sparkretail",
+						"name": "sparkretail",
+						"type": "Spark",
+						"endpoint": "https://synapse-retail-project.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkretail",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net",
+							"authHeader": null
+						},
+						"sparkVersion": "3.5",
+						"nodeCount": 10,
+						"cores": 4,
+						"memory": 28,
+						"extraHeader": null
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Read Silver"
+						]
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						]
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"# Silver path (from previous notebook)\n",
+							"silver_path = \"abfss://retail@retaildatalaketest.dfs.core.windows.net/silver/retail_sales\"\n",
+							"\n",
+							"# Read the clean silver Delta table\n",
+							"silver_df = spark.read.format(\"delta\").load(silver_path)\n",
+							"\n",
+							"print(\"Silver row count:\", silver_df.count())\n",
+							"silver_df.show(5)\n",
+							"silver_df.printSchema()"
+						],
+						"outputs": [],
+						"execution_count": 13
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Business Aggregations (Gold Layer Logic)"
+						]
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"from pyspark.sql.functions import sum, round\n",
+							"\n",
+							"# Aggregate by product_category\n",
+							"gold_df = silver_df.groupBy(\"category\") \\\n",
+							"    .agg(\n",
+							"        sum(\"quantity\").alias(\"total_units\"),\n",
+							"        sum(\"total_amount\").alias(\"revenue\")\n",
+							"    ) \\\n",
+							"    .withColumn(\"revenue\", round(col(\"revenue\"), 2))  # Nice rounded currency\n",
+							"\n",
+							"# Sort for readability\n",
+							"gold_df = gold_df.orderBy(col(\"revenue\").desc())\n",
+							"\n",
+							"print(\"Gold summary row count:\", gold_df.count())\n",
+							"gold_df.show(20, truncate=False)  # Show all categories"
+						],
+						"outputs": [],
+						"execution_count": 15
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Write Gold Layer as Delta"
+						]
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"# Gold path - summarized business metrics\n",
+							"gold_path = \"abfss://retail@retaildatalaketest.dfs.core.windows.net/gold/retail_sales_summary\"\n",
+							"\n",
+							"gold_df.write \\\n",
+							"    .format(\"delta\") \\\n",
+							"    .mode(\"overwrite\") \\\n",
+							"    .option(\"overwriteSchema\", \"true\") \\\n",
+							"    .save(gold_path)\n",
+							"\n",
+							"print(\"✅ Gold layer successfully written as Delta Lake!\")"
+						],
+						"outputs": [],
+						"execution_count": 16
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Quick Verification"
+						]
+					},
+					{
+						"cell_type": "code",
+						"source": [
+							"# Read back to confirm\n",
+							"gold_check = spark.read.format(\"delta\").load(gold_path)\n",
+							"gold_check.show(20, truncate=False)"
+						],
+						"outputs": [],
+						"execution_count": 17
+					}
+				]
 			},
 			"dependsOn": []
 		},
