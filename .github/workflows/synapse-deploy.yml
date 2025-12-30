@@ -1,6 +1,7 @@
 name: Deploy Synapse Artifacts
 
 on:
+  workflow_dispatch:  # Manual run button — use this for now
   push:
     branches:
       - workspace_publish
