@@ -135,7 +135,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "5887126e-6892-4a36-a288-b036ebbc355f"
+						"spark.autotune.trackingId": "d56de229-8f58-47d0-90ae-ff6740bf7358"
 					}
 				},
 				"metadata": {
@@ -176,7 +176,7 @@
 							}
 						},
 						"source": [
-							"Read Bronze Data Test Synapse CI/CD workflow trigger"
+							"Read Bronze Data Tests Synapse CI/CD workflow trigger"
 						]
 					},
 					{
