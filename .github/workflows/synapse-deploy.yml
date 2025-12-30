@@ -15,25 +15,22 @@ jobs:
         with:
           ref: workspace_publish  # Checkout the publish branch to see templates
 
-      - name: Azure Login (Service Principal with Secret)
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: List files for debugging (see where templates are)
+      - name: List files for debugging
         run: ls -R
 
-      - name: Deploy Synapse Artifacts (Validate First - Safe)
-        uses: Azure/synapse-workspace-deployment@release-1.0  # No @v1 — this uses latest
+      - name: Deploy Synapse Artifacts
+        uses: Azure/synapse-workspace-deployment@release-1.0
         with:
           TargetWorkspaceName: synapse-retail-project
           resourceGroup: ${{ secrets.RESOURCE_GROUP }}
-          TemplateFile: synapse-retail-project/TemplateForWorkspace.json  # Usually in root of branch
+          TemplateFile: synapse-retail-project/TemplateForWorkspace.json  # In root of branch; change to synapse/ if subfolder
           ParametersFile: synapse-retail-project/TemplateParametersForWorkspace.json
-
-      # Uncomment for real deploy
-      # operation: deploy
-      # DeleteArtifactsNotInTemplate: true
+          environment: Azure Public  # Required for public cloud
+          clientId: ${{ secrets.AZURE_CLIENT_ID }}
+          clientSecret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenantId: ${{ secrets.AZURE_TENANT_ID }}
+          DeleteArtifactsNotInTemplate: true  # Optional: cleans old artifacts
 
       - name: Done
         run: echo "✅ Synapse artifact deployment completed!"
