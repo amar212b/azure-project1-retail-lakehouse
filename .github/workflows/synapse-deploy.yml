@@ -28,8 +28,8 @@ jobs:
         with:
           TargetWorkspaceName: synapse-retail-project
           resourceGroup: ${{ secrets.RESOURCE_GROUP }}
-          TemplateFile: TemplateForWorkspace.json  # Usually in root of branch
-          ParametersFile: TemplateParametersForWorkspace.json
+          TemplateFile: synapse-retail-project/TemplateForWorkspace.json  # Usually in root of branch
+          ParametersFile: synapse-retail-project/TemplateParametersForWorkspace.json
           operation: validate  # Safe — no changes
 
       # Uncomment for real deploy
