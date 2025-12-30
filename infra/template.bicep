@@ -257,7 +257,7 @@ resource Microsoft_Synapse_workspaces_securityAlertPolicies_workspaces_synapse_r
   }
 }
 
-resource Microsoft_Synapse_workspaces_vulnerabilityAssessments_workspaces_synapse_retail_project_name_Default 'Microsoft.Synapse/workspaces/vulnerabilityAssessments@2021-06-01' = {
+/*resource Microsoft_Synapse_workspaces_vulnerabilityAssessments_workspaces_synapse_retail_project_name_Default 'Microsoft.Synapse/workspaces/vulnerabilityAssessments@2021-06-01' = {
   parent: workspaces_synapse_retail_project_name_resource
   name: 'Default'
   properties: {
@@ -267,7 +267,7 @@ resource Microsoft_Synapse_workspaces_vulnerabilityAssessments_workspaces_synaps
     }
     storageContainerPath: vulnerabilityAssessments_Default_storageContainerPath
   }
-}
+}*/
 
 resource storageAccounts_retaildatalaketest_name_default_retail 'Microsoft.Storage/storageAccounts/blobServices/containers@2025-01-01' = {
   parent: storageAccounts_retaildatalaketest_name_default
