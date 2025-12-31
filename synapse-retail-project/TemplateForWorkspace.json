@@ -135,7 +135,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "d56de229-8f58-47d0-90ae-ff6740bf7358"
+						"spark.autotune.trackingId": "4be8ee55-74d6-4dc2-843e-d4c0422ff451"
 					}
 				},
 				"metadata": {
@@ -160,8 +160,7 @@
 						"sparkVersion": "3.5",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -252,7 +251,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"from pyspark.sql.functions import col\n",
 							"\n",
@@ -284,7 +282,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"silver_path = \"abfss://retail@retaildatalaketest.dfs.core.windows.net/silver/retail_sales\"\n",
 							"\n",
@@ -301,7 +298,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"# Verify the silver Delta table\n",
 							"silver_check = spark.read.format(\"delta\").load(silver_path)\n",
