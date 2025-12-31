@@ -30,7 +30,7 @@ jobs:
           clientSecret: ${{ secrets.AZURE_CLIENT_SECRET }}
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenantId: ${{ secrets.AZURE_TENANT_ID }}
-          DeleteArtifactsNotInTemplate: true  # Optional: cleans old artifacts
+          DeleteArtifactsNotInTemplate: false  # Optional: cleans old artifacts
 
       - name: Done
         run: echo "✅ Synapse artifact deployment completed!"
