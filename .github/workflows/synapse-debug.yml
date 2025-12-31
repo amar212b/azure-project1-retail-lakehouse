@@ -1,4 +1,4 @@
-name: Synapse Debug (Client Secret)
+name: Synapse Debug (Service Principal)
 
 on:
   workflow_dispatch:
@@ -12,13 +12,10 @@ jobs:
         with:
           ref: workspace_publish
 
-      - name: Azure Login (Client Secret)
+      - name: Azure Login
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Verify Azure Context
         run: |
@@ -35,6 +32,3 @@ jobs:
         run: |
           az synapse sql pool list \
             --workspace-name synapse-retail-project
-
-      - name: Debug Complete
-        run: echo "All checks passed"
