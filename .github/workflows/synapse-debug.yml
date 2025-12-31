@@ -31,4 +31,8 @@ jobs:
       - name: List SQL Pools
         run: |
           az synapse sql pool list \
+            --resource-group ${{ secrets.RESOURCE_GROUP }} \
             --workspace-name synapse-retail-project
+
+      - name: Done
+        run: echo "✅ Debug completed!"
