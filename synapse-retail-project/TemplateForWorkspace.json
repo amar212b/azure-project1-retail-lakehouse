@@ -99,12 +99,12 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://retaildatalaketest.dfs.core.windows.net/retail/gold/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+					"query": "-- Gold Revenue Summary\nSELECT \n    category,\n    total_units,\n    revenue\nFROM gold.retail_sales_summary\nORDER BY revenue DESC",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "master",
+						"databaseName": "retail_summary",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
