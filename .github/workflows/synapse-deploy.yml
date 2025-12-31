@@ -1,10 +1,10 @@
 name: Deploy Synapse Artifacts
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Manual trigger — use this for testing
   push:
     branches:
-      - workspace_publish
+      - workspace_publish  # Auto trigger when you click Publish (may need manual run sometimes)
 
 jobs:
   deploy-synapse:
@@ -13,18 +13,15 @@ jobs:
       - name: Checkout workspace_publish branch
         uses: actions/checkout@v4
         with:
-          ref: workspace_publish
+          ref: workspace_publish  # Loads the publish branch with template files
 
       - name: List files for debugging
         run: ls -R
 
-      - name: Azure Login (Service Principal)
+      - name: Azure Login (Service Principal with Secret)
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}  # Your JSON secret with clientId, clientSecret, tenantId, subscriptionId
 
       - name: Deploy Synapse Artifacts
         uses: Azure/synapse-workspace-deployment@release-1.0
@@ -33,8 +30,7 @@ jobs:
           resourceGroup: ${{ secrets.RESOURCE_GROUP }}
           TemplateFile: synapse-retail-project/TemplateForWorkspace.json
           ParametersFile: synapse-retail-project/TemplateParametersForWorkspace.json
-          environment: Azure Public
-          DeleteArtifactsNotInTemplate: true  # This cleans problematic SQL scripts
+          DeleteArtifactsNotInTemplate: false  # Safe — keeps existing artifacts
 
       - name: Done
         run: echo "✅ Synapse artifacts deployed successfully!"
