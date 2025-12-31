@@ -94,26 +94,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- Gold Revenue Summary\nSELECT \n    category,\n    total_units,\n    revenue\nFROM gold.retail_sales_summary\nORDER BY revenue DESC",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "retail_summary",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/01_bronze_to_silver')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
@@ -135,7 +115,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "4be8ee55-74d6-4dc2-843e-d4c0422ff451"
+						"spark.autotune.trackingId": "2aeea7e3-20d5-4943-9af2-29d8f2578ad3"
 					}
 				},
 				"metadata": {
@@ -160,7 +140,8 @@
 						"sparkVersion": "3.5",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -251,6 +232,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"from pyspark.sql.functions import col\n",
 							"\n",
@@ -282,6 +264,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"silver_path = \"abfss://retail@retaildatalaketest.dfs.core.windows.net/silver/retail_sales\"\n",
 							"\n",
@@ -298,6 +281,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Verify the silver Delta table\n",
 							"silver_check = spark.read.format(\"delta\").load(silver_path)\n",
