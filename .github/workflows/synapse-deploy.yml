@@ -1,36 +1,40 @@
 name: Deploy Synapse Artifacts
 
 on:
-  workflow_dispatch:  # Manual trigger for testing
+  workflow_dispatch:
   push:
     branches:
-      - workspace_publish  # Auto trigger on Publish
+      - workspace_publish
 
 jobs:
   deploy-synapse:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository (workspace_publish branch)
+      - name: Checkout workspace_publish branch
         uses: actions/checkout@v4
         with:
-          ref: workspace_publish  # Checkout the publish branch to see templates
+          ref: workspace_publish
 
       - name: List files for debugging
         run: ls -R
+
+      - name: Azure Login (Service Principal)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Deploy Synapse Artifacts
         uses: Azure/synapse-workspace-deployment@release-1.0
         with:
           TargetWorkspaceName: synapse-retail-project
           resourceGroup: ${{ secrets.RESOURCE_GROUP }}
-          TemplateFile: synapse-retail-project/TemplateForWorkspace.json  # In root of branch; change to synapse/ if subfolder
+          TemplateFile: synapse-retail-project/TemplateForWorkspace.json
           ParametersFile: synapse-retail-project/TemplateParametersForWorkspace.json
-          environment: Azure Public  # Required for public cloud
-          clientId: ${{ secrets.AZURE_CLIENT_ID }}
-          clientSecret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          tenantId: ${{ secrets.AZURE_TENANT_ID }}
-          DeleteArtifactsNotInTemplate: false  # Optional: cleans old artifacts
+          environment: Azure Public
+          DeleteArtifactsNotInTemplate: true  # This cleans problematic SQL scripts
 
       - name: Done
-        run: echo "✅ Synapse artifact deployment completed!"
+        run: echo "✅ Synapse artifacts deployed successfully!"
