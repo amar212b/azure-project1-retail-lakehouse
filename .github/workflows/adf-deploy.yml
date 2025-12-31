@@ -1,6 +1,7 @@
 name: Deploy Azure Data Factory
 
 on:
+  workflow_dispatch: # Manual trigger — you can run it from Actions tab
   push:
     branches:
       - adf_publish
@@ -12,9 +13,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+          ref: adf_publish  # Checkout the publish branch to access ARM templates
 
+    - name: List files for debugging
+      run: ls -R
+        
     - name: Azure Login
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -22,9 +28,11 @@ jobs:
         client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
     - name: Deploy ARM Template
-      uses: azure/arm-deploy@v1
+      uses: azure/arm-deploy@v2
       with:
         resourceGroupName: ${{ secrets.RESOURCE_GROUP }}
         template: adf-retail-project-1/ARMTemplateForFactory.json
         parameters: adf-retail-project-1/ARMTemplateParametersForFactory.json
         deploymentMode: Incremental
+    - name: Done
+      run: echo "✅ ADF deployment completed successfully!"
