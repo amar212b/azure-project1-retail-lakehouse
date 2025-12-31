@@ -1,28 +1,16 @@
-name: Synapse Debug Pipeline
+name: Synapse Debug (Client Secret)
 
 on:
   workflow_dispatch:
-
-permissions:
-  id-token: write
-  contents: read
 
 jobs:
   debug:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout workspace_publish
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: workspace_publish
-
-      - name: Show files
-        run: |
-          echo "=== ROOT ==="
-          ls -la
-          echo "=== SYNAPSE FOLDER ==="
-          ls -la synapse-retail-project
 
       - name: Azure Login (Client Secret)
         uses: azure/login@v1
@@ -37,16 +25,16 @@ jobs:
           az account show
           az group show --name ${{ secrets.RESOURCE_GROUP }}
 
-      - name: Verify Synapse Access
+      - name: Verify Synapse Workspace Access
         run: |
           az synapse workspace show \
             --name synapse-retail-project \
             --resource-group ${{ secrets.RESOURCE_GROUP }}
 
-      - name: Verify SQL Pool Access (important)
+      - name: List SQL Pools
         run: |
           az synapse sql pool list \
             --workspace-name synapse-retail-project
 
-      - name: DONE
-        run: echo "Debug completed"
+      - name: Debug Complete
+        run: echo "All checks passed"
