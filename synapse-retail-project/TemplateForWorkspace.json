@@ -110,12 +110,12 @@
 					"executorMemory": "28g",
 					"executorCores": 4,
 					"numExecutors": 1,
-					"runAsWorkspaceSystemIdentity": false,
+					"runAsWorkspaceSystemIdentity": true,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "1",
 						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "2aeea7e3-20d5-4943-9af2-29d8f2578ad3"
+						"spark.autotune.trackingId": "bdc17a7b-f02d-4c27-bb2f-5b63508971b5"
 					}
 				},
 				"metadata": {
@@ -140,8 +140,7 @@
 						"sparkVersion": "3.5",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -232,7 +231,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"from pyspark.sql.functions import col\n",
 							"\n",
@@ -264,7 +262,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"silver_path = \"abfss://retail@retaildatalaketest.dfs.core.windows.net/silver/retail_sales\"\n",
 							"\n",
@@ -281,7 +278,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"# Verify the silver Delta table\n",
 							"silver_check = spark.read.format(\"delta\").load(silver_path)\n",
@@ -313,20 +309,21 @@
 					"executorMemory": "28g",
 					"executorCores": 4,
 					"numExecutors": 2,
-					"runAsWorkspaceSystemIdentity": false,
+					"runAsWorkspaceSystemIdentity": true,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8d7700ff-9d9e-400a-845c-c2809f6a4ff4"
+						"spark.autotune.trackingId": "3ca255d7-7b42-468f-b383-58e00e7fdb7c"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "python"
+					},
 					"language_info": {
 						"name": "python"
 					},
@@ -337,14 +334,13 @@
 						"endpoint": "https://synapse-retail-project.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkretail",
 						"auth": {
 							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net",
-							"authHeader": null
+							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "3.5",
 						"nodeCount": 10,
 						"cores": 4,
 						"memory": 28,
-						"extraHeader": null
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -377,6 +373,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Silver path (from previous notebook)\n",
 							"silver_path = \"abfss://retail@retaildatalaketest.dfs.core.windows.net/silver/retail_sales\"\n",
@@ -406,6 +403,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"from pyspark.sql.functions import sum, round\n",
 							"\n",
@@ -441,6 +439,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Gold path - summarized business metrics\n",
 							"gold_path = \"abfss://retail@retaildatalaketest.dfs.core.windows.net/gold/retail_sales_summary\"\n",
@@ -471,6 +470,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"# Read back to confirm\n",
 							"gold_check = spark.read.format(\"delta\").load(gold_path)\n",
