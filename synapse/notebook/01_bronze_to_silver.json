@@ -13,12 +13,12 @@
 			"executorMemory": "28g",
 			"executorCores": 4,
 			"numExecutors": 1,
-			"runAsWorkspaceSystemIdentity": false,
+			"runAsWorkspaceSystemIdentity": true,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "4be8ee55-74d6-4dc2-843e-d4c0422ff451"
+				"spark.autotune.trackingId": "bdc17a7b-f02d-4c27-bb2f-5b63508971b5"
 			}
 		},
 		"metadata": {
